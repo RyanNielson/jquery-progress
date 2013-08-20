@@ -1,20 +1,9 @@
-// the semi-colon before function invocation is a safety net against concatenated
-// scripts and/or other plugins which may not be closed properly.
 ;(function ( $, window, document, undefined ) {
-
-    // undefined is used here as the undefined global variable in ECMAScript 3 is
-    // mutable (ie. it can be changed by someone else). undefined isn't really being
-    // passed in so we can ensure the value of it is truly undefined. In ES5, undefined
-    // can no longer be modified.
-
-    // window and document are passed through as local variable rather than global
-    // as this (slightly) quickens the resolution process and can be more efficiently
-    // minified (especially when both are regularly referenced in your plugin).
 
     // Create the defaults once
     var pluginName = "progress",
         defaults = {
-            height: "10px",
+            height: "2px",
             color: "#FF0000",
             completeColor: "#00FF00"
         };
@@ -22,10 +11,6 @@
     // The actual plugin constructor
     function Plugin ( element, options ) {
         this.element = element;
-        // jQuery has an extend method which merges the contents of two or
-        // more objects, storing the result in the first object. The first object
-        // is generally empty as we don't want to alter the default options for
-        // future instances of the plugin
         this.settings = $.extend( {}, defaults, options );
         this._defaults = defaults;
         this._name = pluginName;
@@ -34,48 +19,68 @@
 
     Plugin.prototype = {
         init: function () {
-            // Place initialization logic here
-            // You already have access to the DOM element and
-            // the options via the instance, e.g. this.element
-            // and this.settings
-            // you can add more functions like the one below and
-            // call them like so: this.yourOtherFunction(this.element, this.settings).
-
             this._prepareProgressBar();
             this._setupScrollEvents();
-
         },
         _prepareProgressBar: function() {
-            var progressBar = $("<div>").css({
+            this._progressBar = $("<div>").css({
                 "height": this.settings.height,
                 "background-color": this.settings.color,
                 "position": "fixed",
                 "left": "0",
-                "top": "0",
-                "width": "50%"
+                "top": "0"
             });
 
-            $("body").append(progressBar);
+            $("body").append(this._progressBar);
         },
-        _isScrolledIntoView: function() {
+        _isAboveElement: function() {
+            var docViewTop = $(window).scrollTop(),
+                docViewBottom = docViewTop + $(window).height(),
+                elemTop = $(this.element).offset().top;
+
+            return (elemTop > docViewBottom);
+        },
+        _isBelowElement: function() {
             var docViewTop = $(window).scrollTop(),
                 docViewBottom = docViewTop + $(window).height(),
                 elemTop = $(this.element).offset().top,
                 elemBottom = elemTop + $(this.element).height();
 
-            return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+            return (elemBottom < docViewBottom);
+        },
+        _getBarWidth: function() {
+            var docViewTop = $(window).scrollTop(),
+                docViewBottom = docViewTop + $(window).height(),
+                elemTop = $(this.element).offset().top,
+                elemHeight = $(this.element).height(),
+                topDifference = docViewBottom - elemTop;
+
+            return (topDifference / elemHeight) * 100;
         },
         _setupScrollEvents: function() {
             _this = this;
 
             $(window).scroll(function() {
-                if (_this._isScrolledIntoView()) {
-                    console.log("in view");
+                if (_this._isAboveElement()) {
+                    _this._progressBar.css({
+                        "width": "0"
+                    });
+                }
+                else if (_this._isBelowElement()) {
+                    _this._progressBar.css({
+                        "width": "100%",
+                        "background-color": _this.settings.completeColor
+                    });
                 }
                 else {
-                    console.log("not in view");
+                    _this._progressBar.css({
+                        "width": _this._getBarWidth() + "%",
+                        "background-color": _this.settings.color
+                    });
                 }
             });
+
+            $(window).scroll();
         }
     };
 
