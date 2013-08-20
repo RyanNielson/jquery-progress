@@ -1,0 +1,36 @@
+{
+	"name": "progress",
+	"title": "jQuery Progress",
+	"description": "Progress bars for element scroll progress.",
+	"keywords": [
+		"jquery",
+		"progress",
+		"plugins"
+	],
+	"version": "0.1.0",
+	"author": {
+		"name": "Ryan Nielson",
+		"email": "ryan.nielson@gmail.com",
+		"url": "https://github.com/ryannielson"
+	},
+	"maintainers": [
+		{
+			"name": "Ryan Nielson",
+			"email": "ryan.nielson@gmail.com",
+			"url": "https://github.com/ryannielson"
+		}
+	],
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://zenorocha.mit-license.org/"
+		}
+	],
+	"bugs": "https://github.com/ryannielson/jquery-progress/issues",
+	"homepage": "https://github.com/ryannielson/jquery-progress",
+	"docs": "https://github.com/ryannielson/jquery-progress#readme",
+	"download": "https://github.com/ryannielson/jquery-progress/archive/master.zip",
+	"dependencies": {
+		"jquery": ">=1.4"
+	}
+}

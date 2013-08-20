@@ -1,0 +1,23 @@
+{
+  "name": "jquery-progress",
+  "title": "jQuery Progress",
+  "description": "Progress bars for element scroll progress.",
+  "author": "Ryan Nielson",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ryannielson/jquery-progress.git"
+  },
+  "homepage": "https://github.com/ryannielson/jquery-progress/",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.7",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-coffee": "~0.7.0"
+  },
+  "scripts": {
+    "test": "grunt travis --verbose"
+  }
+}
