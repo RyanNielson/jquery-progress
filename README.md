@@ -5,7 +5,7 @@ Progress is a jQuery plugin which displays and elegant progress bar at the top o
 
 ## Demo
 
-An example can be found in the [examples folder](https://github.com/RyanNielson/jquery-progress/blob/master/demo/index.html).
+An example can be found in the [examples folder](https://github.io/RyanNielson/jquery-progress/demo/).
 
 
 ## Options
