@@ -8,7 +8,6 @@
             completeColor: "#00FF00"
         };
 
-    // The actual plugin constructor
     function Plugin ( element, options ) {
         this.element = element;
         this.settings = $.extend( {}, defaults, options );
@@ -33,40 +32,31 @@
 
             $("body").append(this._progressBar);
         },
-        _isAboveElement: function() {
-            var docViewTop = $(window).scrollTop(),
-                docViewBottom = docViewTop + $(window).height(),
-                elemTop = $(this.element).offset().top;
-
-            return (elemTop > docViewBottom);
+        _isAboveElement: function(elementTop, viewBottom) {
+            return (elementTop > viewBottom);
         },
-        _isBelowElement: function() {
-            var docViewTop = $(window).scrollTop(),
-                docViewBottom = docViewTop + $(window).height(),
-                elemTop = $(this.element).offset().top,
-                elemBottom = elemTop + $(this.element).height();
-
-            return (elemBottom < docViewBottom);
+        _isBelowElement: function(elementBottom, viewBottom) {
+            return (elementBottom < viewBottom);
         },
-        _getBarWidth: function() {
-            var docViewTop = $(window).scrollTop(),
-                docViewBottom = docViewTop + $(window).height(),
-                elemTop = $(this.element).offset().top,
-                elemHeight = $(this.element).height(),
-                topDifference = docViewBottom - elemTop;
-
-            return (topDifference / elemHeight) * 100;
+        _getBarWidth: function(topDifference, elementHeight) {
+            return (topDifference / elementHeight) * 100;
         },
         _setupScrollEvents: function() {
             _this = this;
 
-            $(window).scroll(function() {
-                if (_this._isAboveElement()) {
+            var recalculateProgressBar = function() {
+                var viewBottom = $(window).scrollTop() + $(window).height(),
+                    elementTop = $(_this.element).offset().top,
+                    elementBottom = elementTop + $(_this.element).height(),
+                    elementHeight = $(_this.element).height(),
+                    topDifference = viewBottom - elementTop;
+
+                if (_this._isAboveElement(elementTop, viewBottom)) {
                     _this._progressBar.css({
                         "width": "0"
                     });
                 }
-                else if (_this._isBelowElement()) {
+                else if (_this._isBelowElement(elementBottom, viewBottom)) {
                     _this._progressBar.css({
                         "width": "100%",
                         "background-color": _this.settings.completeColor
@@ -74,12 +64,14 @@
                 }
                 else {
                     _this._progressBar.css({
-                        "width": _this._getBarWidth() + "%",
+                        "width": _this._getBarWidth(topDifference, elementHeight) + "%",
                         "background-color": _this.settings.color
                     });
                 }
-            });
+            };
 
+            $(window).scroll(recalculateProgressBar);
+            $(window).resize(recalculateProgressBar);
             $(window).scroll();
         }
     };
